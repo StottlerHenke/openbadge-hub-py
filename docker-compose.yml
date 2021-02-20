@@ -10,7 +10,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./compose/openbadge-hub-py/Dockerfile_jessie_prod
+      dockerfile: ./compose/openbadge-hub-py/Dockerfile_buster_prod
     volumes:
       - hub_data:/data
       - hub_logs:/logs
