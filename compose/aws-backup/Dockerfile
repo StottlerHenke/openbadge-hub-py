@@ -1,4 +1,4 @@
-FROM resin/rpi-raspbian:jessie
+FROM balenalib/rpi-raspbian:jessie
 MAINTAINER Jordan Reedie jreedie@mit.edu
 ENV DEBIAN_FRONTEND noninteractive
 
