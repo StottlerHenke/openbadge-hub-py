@@ -116,6 +116,7 @@ Then follow the instructions below for setting up with docker-machine.
 ## Deployment with docker-machine
 Create a .env file (use the env.example file from the root directory as a template) and change the server address, port
 and key:
+* HUB_UUID : a unique identifier for this hub, required for the server to recognize authorized connections
 * BADGE_SERVER_ADDR : server address (e.g. my.server.com)
 * BADGE_SERVER_PORT : port
 * APPKEY : application authentication key (needs to match APPKEY in your server configuration)

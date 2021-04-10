@@ -22,7 +22,7 @@ def get_uuid():
     """
     Return the UUID of this hub for use in communication with server
     """
-    return socket.gethostname()
+    return settings.HUB_UUID
 
 
 def register_hub():

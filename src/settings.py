@@ -57,4 +57,6 @@ if CONFIG_DIR is None:
     print("CONFIG_DIR is not set")
     sys.exit(1)
 
-HUB_UUID = socket.gethostname()
+HUB_UUID = os.environ.get("HUB_UUID")
+if HUB_UUID is None:
+    HUB_UUID = socket.gethostname()
