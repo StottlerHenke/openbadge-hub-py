@@ -1,6 +1,6 @@
 # Based on - https://github.com/don41382/docker-rpi-python3-with-bluetooth
 # Pull base image
-FROM balenalib/rpi-raspbian:jessie
+FROM balenalib/rpi-raspbian:buster
 MAINTAINER Oren Lederman orenled@mit.edu
 
 # Install dependencies
