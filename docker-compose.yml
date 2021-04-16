@@ -6,7 +6,7 @@ volumes:
   hub_config: {}
 
 services:
-  openbadge-hub-py:
+  hub-raspbian:
     restart: always
     build:
       context: .

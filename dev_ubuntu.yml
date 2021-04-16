@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  openbadge-hub-py:
+  hub-ubuntu-dev:
     build:
       context: .
       dockerfile: ./compose/openbadge-hub-py/Dockerfile_ubuntu_dev
