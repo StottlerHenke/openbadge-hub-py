@@ -60,3 +60,4 @@ if CONFIG_DIR is None:
 HUB_UUID = os.environ.get("HUB_UUID")
 if HUB_UUID is None:
     HUB_UUID = socket.gethostname()
+    print("HUB_UUID is not set, using hostname:", HUB_UUID)

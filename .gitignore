@@ -5,6 +5,7 @@
 
 # local configuration
 devices.txt
+devices_beacon.txt
 .env*
 
 # temp files and logs
