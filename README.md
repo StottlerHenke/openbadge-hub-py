@@ -2,7 +2,7 @@
 
 The (python) hub is used for controlling, monitoring, and communicating with the badges. It is written in Python and tested with Python version 2.7 (specifically 2.7.16 on Raspbian Buster).
 
-The hub uses [Docker](https://www.docker.com/) to simplify setup and deployment.  Currently the only approach for installing Docker on Raspbian is to use the [Docker convenience script](https://docs.docker.com/engine/install/debian/#install-using-the-convenience-script)
+The hub uses [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) to simplify setup and deployment.  Currently the only approach for installing Docker on Raspbian is to use the [Docker convenience script](https://docs.docker.com/engine/install/debian/#install-using-the-convenience-script).  Use `pip` (and specifically `pip3`) from the "Alternative install options" to [install Docker Compose](https://docs.docker.com/compose/install/#install-compose) on Raspbian: `pip3 install docker-compose`.
 
 There are two main modes of operation - 
 1. [**Standalone mode**](#standalone-mode) - in standalone mode the hub loads a list of badges from a static files and writes data to local files. This mode is useful for testing, development, and when you only need a single hub.
@@ -11,24 +11,16 @@ There are two main modes of operation -
 **Important notes:**
 * When using multiple hubs, it's important to set up NTP properly so that the time on the hubs is synchronized. Unsynchronized clocks will lead to significant data loss and data corruption
 * When running the hub on Raspberry Pi, the hub will modify system parameters in order to (significantly) speed up Bluetooth communication. These settings might affect the communication with other Bluetooth devices, and therefore we do not apply these changes to non-raspberry pi machines
-* Docker uses different base images for Ubuntu and Raspbian, and therefore there are different .yml files for different operating systems
-
-
-## Development configurations
-The default [`docker-compose.yml`](docker-compose.yml) configuration uses a **production** configuration for Raspbian ([`Dockerfile_raspbian_prod`](compose/openbadge-hub-py/Dockerfile_raspbian_prod)), which runs in [server mode](#server-mode).  There are two **development** configuration files for both Raspbian ([`dev_raspbian.yml`](dev_raspbian.yml)) and Ubuntu ([`dev_ubuntu.yml`](dev_ubuntu.yml)).
-
-The development configuration files are different in that they:
-* Default to [standalone mode](#standalone-mode).
-* Mount the local `src`, `data`, `logs` and `config` directories as volumes in docker. This allows
-faster builds and easier access to the data generated in this mode.
+* Docker uses different base images for Ubuntu and Raspbian, and therefore there are different `.yml` files for different operating systems
 
 
 ## Standalone mode
 To use the hub in **standalone** mode, you need to create two files under the `config` folder:
 * `devices.txt` - list of member badges. These badges will collect proximity and audio data
 * `devices_beacon.txt` - list of beacons badges. These badges will only broadcast their IDs
+* The `.env` file used in [server mode](#server-mode) is also required (but not used) in standalone mode
 
-You can refer to [`config/devices.txt.example`](config/devices.txt.example) and [`config/devices_beacons.txt.example`](config/devices_beacons.txt.example) as a reference for the file structure.
+You can refer to [`config/devices.txt.example`](config/devices.txt.example) and [`config/devices_beacon.txt.example`](config/devices_beacon.txt.example) as a reference for the file structure.
 
 **Important notes:**
 * Make sure you provide all members and beacons with the same project id (otherwise they will not see each other)
@@ -92,6 +84,15 @@ To attach to an interactive shell for an already-running hub container:
 ```
 docker exec -it CONTAINER_NAME /bin/bash
 ```
+
+
+## Development configurations
+The default [`docker-compose.yml`](docker-compose.yml) configuration uses a **production** configuration for Raspbian ([`Dockerfile_raspbian_prod`](compose/openbadge-hub-py/Dockerfile_raspbian_prod)), which runs in [server mode](#server-mode).  There are two **development** configuration files for both Raspbian ([`dev_raspbian.yml`](dev_raspbian.yml)) and Ubuntu ([`dev_ubuntu.yml`](dev_ubuntu.yml)).
+
+The development configuration files are different in that they:
+* Default to [standalone mode](#standalone-mode).
+* Mount the local `src`, `data`, `logs` and `config` directories as volumes in docker. This allows
+faster builds and easier access to the data generated in this mode.
 
 
 ## Miscellaneous
