@@ -163,6 +163,9 @@ class BadgeDelegate(DefaultDelegate):
         btle.DefaultDelegate.__init__(self)
         self.reset()
 
+    def timestamp_pretty(self): 
+        return datetime.datetime.fromtimestamp(self.timestamp_sec).strftime("%Y-%m-%d@%H:%M:%S")
+
     def reset(self):
         self.tempChunk = Chunk((None,None,None,None,None),[])
         self.tempScan = Scan((None,None,None),[])
@@ -338,6 +341,10 @@ class Badge:
             raise ValueError('Trying to last_proximity_ts with an old value')
         self.__last_proximity_ts = value
 
+    @property
+    def last_proximity_ts_pretty(self):
+        return datetime.datetime.fromtimestamp(self.last_proximity_ts).strftime("%Y-%m-%d@%H:%M:%S")
+
     @last_contacted_ts.setter
     def last_contacted_ts(self, value):
         if value < self.__last_contacted_ts:
@@ -353,6 +360,10 @@ class Badge:
     @property
     def last_audio_ts_int(self):
         return self.__audio_ts['last_audio_ts_int']
+    
+    @property
+    def last_audio_ts_pretty(self):
+        return datetime.datetime.fromtimestamp(self.last_audio_ts_int).strftime("%Y-%m-%d@%H:%M:%S")
 
     @last_audio_ts_int.setter
     def last_audio_ts_int(self, value):
@@ -492,7 +503,8 @@ class Badge:
                 self.last_unsync_ts = time.time()
 
         # log badge datetime regardless - may be useful to know after unsync
-        self.logger.info("Badge datetime was: {},{}".format(self.dlg.timestamp_sec, self.dlg.timestamp_ms))
+        self.logger.info("Badge datetime was: {},{} ({})".format(
+            self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
 
     def sync_timestamp(self):
         """
@@ -557,7 +569,8 @@ class Badge:
 
                 self.logger.info("Got time ack")
 
-                self.logger.info("Badge datetime was: {},{}".format(self.dlg.timestamp_sec, self.dlg.timestamp_ms))
+                self.logger.info("Badge datetime was: {},{} ({})".format(
+                    self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
 
             # Reset flag (hacky)
             self.dlg.gotTimestamp = False
@@ -571,7 +584,8 @@ class Badge:
 
                 self.logger.info("Got time ack")
 
-                self.logger.info("Badge datetime was: {},{}".format(self.dlg.timestamp_sec, self.dlg.timestamp_ms))
+                self.logger.info("Badge datetime was: {},{} ({})".format(
+                    self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
 
             retcode = 0
 
@@ -624,7 +638,8 @@ class Badge:
 
                     self.logger.info("Got time ack")
 
-                    self.logger.info("Badge datetime was: {},{}".format(self.dlg.timestamp_sec, self.dlg.timestamp_ms))
+                    self.logger.info("Badge datetime was: {},{} ({})".format(
+                        self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
 
             # Reset flag (hacky)
             self.dlg.gotTimestamp = False
@@ -639,10 +654,12 @@ class Badge:
 
                     self.logger.info("Got time ack")
 
-                    self.logger.info("Badge datetime was: {},{}".format(self.dlg.timestamp_sec, self.dlg.timestamp_ms))
+                    self.logger.info("Badge datetime was: {},{} ({})".format(
+                        self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
 
-            # audio data data request since time X
-            self.logger.info("Requesting data since {} {}".format(self.last_audio_ts_int, self.last_audio_ts_fract))
+            # audio data request since time X
+            self.logger.info("Requesting audio data since {} {} ({})".format(
+                self.last_audio_ts_int, self.last_audio_ts_fract, self.last_audio_ts_pretty))
             self.sendDataRequest(self.last_audio_ts_int, self.last_audio_ts_fract)  # ask for data
             wait_count = 0
             while True:
@@ -654,10 +671,11 @@ class Badge:
                 self.logger.info("Waiting for more data...")
                 wait_count = wait_count + 1
                 if wait_count >= PULL_WAIT: break
-            self.logger.info("finished reading data")
+            self.logger.info("finished reading audio data")
 
             # proximity data request since time X
-            self.logger.info("Requesting scans since {}".format(self.last_proximity_ts))
+            self.logger.info("Requesting proximity scans since {} ({})".format(
+                self.last_proximity_ts, self.last_proximity_ts_pretty))
             # Proximity "chunks" are always full.Therefore, we do not need ask for the last chunk again. Adding 1 sec
             # to prevent it
             proximity_ts = self.last_proximity_ts + 1
@@ -672,7 +690,7 @@ class Badge:
                 self.logger.info("Waiting for more data...")
                 wait_count = wait_count + 1
                 if wait_count >= PULL_WAIT: break
-            self.logger.info("finished reading data")
+            self.logger.info("finished reading proximity data")
 
             retcode = 0
 

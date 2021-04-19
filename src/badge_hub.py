@@ -240,12 +240,15 @@ def dialogue(bdg, activate_audio, activate_proximity, mode="server"):
 
         # update badge object to hold latest timestamps
         last_chunk = bdg.dlg.chunks[-1]
+        last_chunk_ts_pretty = datetime.datetime.fromtimestamp(last_chunk.ts).strftime("%Y-%m-%d@%H:%M:%S")
         if bdg.is_newer_audio_ts(last_chunk.ts, last_chunk.fract):
-            logger.debug("Setting last badge audio timestamp to {} {}".format(last_chunk.ts, last_chunk.fract))
+            logger.debug("Setting last badge audio timestamp to {} {} ({})".format(
+                last_chunk.ts, last_chunk.fract, last_chunk_ts_pretty))
             bdg.set_audio_ts(last_chunk.ts, last_chunk.fract)
         else:
-            logger.debug("Keeping existing timestamp ({}.{}) for {}. Last chunk timestamp was: {}.{}"
-                              .format(bdg.last_audio_ts_int,bdg.last_audio_ts_fract,bdg.addr, last_chunk.ts, last_chunk.fract))
+            logger.debug("Keeping existing timestamp ({}.{}) for {}. Last chunk timestamp was: {}.{} ({})"
+                            .format(bdg.last_audio_ts_int,bdg.last_audio_ts_fract,bdg.addr, 
+                                last_chunk.ts, last_chunk.fract, last_chunk_pretty))
 
 
     else:
@@ -283,7 +286,9 @@ def dialogue(bdg, activate_audio, activate_proximity, mode="server"):
 
         # update badge object to hold latest timestamps
         last_scan = bdg.dlg.scans[-1]
-        logger.debug("Setting last badge proximity timestamp to {}".format(last_scan.ts))
+        last_scan_ts_pretty = datetime.datetime.fromtimestamp(last_scan.ts).strftime("%Y-%m-%d@%H:%M:%S")
+        logger.debug("Setting last badge proximity timestamp to {} ([])".format(
+            last_scan.ts, last_scan_ts_pretty))
         bdg.last_proximity_ts = last_scan.ts
     else:
         logger.info("No proximity scans ready")
@@ -294,7 +299,7 @@ def scan_for_devices(devices_whitelist, show_all=False):
     try:
         all_devices = bd.discover(scan_duration=SCAN_DURATION)
     except Exception as e: # catch *all* exceptions
-        logger.error("Scan failed,{}".format(e))
+        logger.error("[Badges] Scan failed,{}".format(e))
         all_devices = {}
 
     scanned_devices = []
@@ -316,7 +321,7 @@ def scan_for_bc_devices(devices_whitelist, show_all=False):
     try:
         all_bc_devices = bc.discover(scan_duration=SCAN_DURATION)
     except Exception as e: # catch *all* exceptions
-        logger.error("Scan failed,{}".format(e))
+        logger.error("[Beacons] Scan failed,{}".format(e))
         all_bc_devices = {}
 
     scanned_bc_devices = []

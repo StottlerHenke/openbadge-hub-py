@@ -41,10 +41,10 @@ class BadgeManagerServer:
 
         while not done:
             try:
-                self.logger.info("Requesting devices from server...")
+                self.logger.info("Requesting badges from server {} ...".format(BADGES_ENDPOINT))
                 response = requests.get(BADGES_ENDPOINT, headers=request_headers(), timeout=self.DEFAULT_TIMEOUT)
                 if response.ok:
-                    self.logger.info("Updating devices list ({})...".format(len(response.json())))
+                    self.logger.info("Updating badges list ({})...".format(len(response.json())))
                     for d in response.json():
                         if(d.get('active')==True):
                             server_badges[d.get('badge')] = self._jason_badge_to_object(d)
@@ -55,7 +55,8 @@ class BadgeManagerServer:
 
             except (requests.exceptions.ConnectionError, Exception) as e:
                 s = traceback.format_exc()
-                self.logger.error("Error reading badges list from server : {}, {}".format(e,s))
+                self.logger.error("Error reading badges list from server : {}".format(e))
+                self.logger.debug("Error details: {}".format(s))
                 if not retry:
                     done = True
                 else:
@@ -74,7 +75,7 @@ class BadgeManagerServer:
 
         while not done:
             try:
-                self.logger.info("Requesting device {} from server...".format(badge_key))
+                self.logger.info("Requesting badge {} from server...".format(badge_key))
                 response = requests.get(BADGE_ENDPOINT(badge_key), headers=request_headers(), timeout=self.DEFAULT_TIMEOUT)
                 if response.ok:
                     #self.logger.debug("Received ({})...".format(response.json()))

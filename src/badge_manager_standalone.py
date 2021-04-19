@@ -23,19 +23,21 @@ class BadgeManagerStandalone():
         else:
             self._init_ts, self._init_ts_fract = now_utc_epoch()
             self._init_ts -= 5 * 60 # start pulling data from the 5 minutes
-        logger.debug("Standalone version. Will request data since {} {}".format(self._init_ts,self._init_ts_fract))
+        ts_pretty = datetime.datetime.fromtimestamp(self._init_ts).strftime("%Y-%m-%d@%H:%M:%S")
+        logger.debug("[Badges] Standalone version. Will request data since {} {} ({}))".format(
+            self._init_ts, self._init_ts_fract, ts_pretty))
 
     def _read_file(self,device_file):
         """
-        refreshes an internal list of devices included in device_macs.txt
+        refreshes an internal list of devices included in devices.txt
         Format is device_mac<space>badge_id<space>project_id<space>device_name
         :param device_file:
         :return:
         """
         if not os.path.isfile(device_file):
-            self.logger.error("Cannot find devices file: {}".format(device_file))
+            self.logger.error("Cannot find badge devices file: {}".format(device_file))
             exit(1)
-        self.logger.info("Reading devices from file: {}".format(device_file))
+        self.logger.info("Reading badges from file: {}".format(device_file))
 
         #extracting badge id, project id and mac address
         with open(device_file, 'r') as devices_macs:
@@ -44,8 +46,10 @@ class BadgeManagerStandalone():
             devices = []
 
             for line in devices_macs:
-                if not line.lstrip().startswith('#'):
-                    device_details = line.split()
+                stripped = line.lstrip()
+                # skip empty lines and # comments
+                if stripped and not stripped.startswith('#'):
+                    device_details = stripped.split()
                     devices.append(
                         {"mac": device_details[0],
                          "badge_id": device_details[1],

@@ -37,7 +37,7 @@ class BeaconManagerServer:
 
         while not done:
             try:
-                self.logger.info("Requesting devices from server...")
+                self.logger.info("Requesting beacons from server {} ...".format(BADGES_ENDPOINT))
                 response = requests.get(BEACONS_ENDPOINT, headers=request_headers(), timeout=self.DEFAULT_TIMEOUT)
                 if response.ok:
                     self.logger.info("Updating beacons list ({})...".format(len(response.json())))
@@ -50,7 +50,8 @@ class BeaconManagerServer:
 
             except (requests.exceptions.ConnectionError, Exception) as e:
                 s = traceback.format_exc()
-                self.logger.error("Error reading beacon list from server : {}, {}".format(e,s))
+                self.logger.error("Error reading beacon list from server : {}".format(e))
+                self.logger.debug("Error details: {}".format(s))
                 if not retry:
                     done = True
                 else:
@@ -69,7 +70,7 @@ class BeaconManagerServer:
 
         while not done:
             try:
-                self.logger.info("Requesting device {} from server...".format(beacon_key))
+                self.logger.info("Requesting beacon {} from server...".format(beacon_key))
                 response = requests.get(
                     BEACON_ENDPOINT(beacon_key), headers=request_headers(), timeout=self.DEFAULT_TIMEOUT)
                 if response.ok:

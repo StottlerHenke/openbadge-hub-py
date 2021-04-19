@@ -22,19 +22,21 @@ class BeaconManagerStandalone():
         else:
             self._init_ts, self._init_ts_fract = now_utc_epoch()
             self._init_ts -= 5 * 60 # start pulling data from the 5 minutes
-        logger.debug("Standalone version. Will request data since {} {}".format(self._init_ts,self._init_ts_fract))
+        ts_pretty = datetime.datetime.fromtimestamp(self._init_ts).strftime("%Y-%m-%d@%H:%M:%S")
+        logger.debug("[Beacons] Standalone version. Will request data since {} {} ({})".format(
+            self._init_ts, self._init_ts_fract, ts_pretty))
 
     def _read_file(self,device_file):
         """
-        refreshes an internal list of devices included in device_macs.txt
+        refreshes an internal list of devices included in devices_beacon.txt
         Format is device_mac<space>badge_id<space>project_id<space>device_name
         :param device_file:
         :return:
         """
         if not os.path.isfile(device_file):
-            self.logger.error("Cannot find devices file: {}".format(device_file))
+            self.logger.error("Cannot find beacon devices file: {}".format(device_file))
             exit(1)
-        self.logger.info("Reading devices from file: {}".format(device_file))
+        self.logger.info("Reading beacons from file: {}".format(device_file))
 
         #extracting badge id, project id and mac address
         with open(device_file, 'r') as devices_macs:
@@ -43,8 +45,10 @@ class BeaconManagerStandalone():
             devices = []
 
             for line in devices_macs:
-                if not line.lstrip().startswith('#'):
-                    device_details = line.split()
+                stripped = line.lstrip()
+                # skip empty lines and # comments
+                if stripped and not stripped.startswith('#'):
+                    device_details = stripped.split()
                     devices.append(device_details[0])
                     badge_project_ids.append(device_details[1:3])
                     

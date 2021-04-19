@@ -86,7 +86,7 @@ def _read_hubs_list_from_server(logger, retry=True, retry_delay_sec=5):
 
     while not done:
         try:
-            logger.info("Requesting devices from server...")
+            logger.info("Requesting hubs from server {} ...".format(HUBS_ENDPOINT))
             response = requests.get(HUBS_ENDPOINT, timeout=DEFAULT_TIMEOUT)
             if response.ok:
                 logger.info("Updating hubs list ({})...".format(len(response.json())))
@@ -98,7 +98,8 @@ def _read_hubs_list_from_server(logger, retry=True, retry_delay_sec=5):
 
         except (requests.exceptions.ConnectionError, Exception) as e:
             s = traceback.format_exc()
-            logger.error("Error reading hubs list from server : {} {}".format(e,s))
+            logger.error("Error reading hubs list from server : {}".format(e))
+            logger.debug("Error details: {}".format(s))
             if not retry:
                 done = True
             else:
