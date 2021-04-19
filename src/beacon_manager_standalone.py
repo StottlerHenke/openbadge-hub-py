@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 import os
 import re
+import datetime
 import logging
 import requests
 from server import BEACON_ENDPOINT, BEACONS_ENDPOINT, request_headers
@@ -22,7 +23,7 @@ class BeaconManagerStandalone():
         else:
             self._init_ts, self._init_ts_fract = now_utc_epoch()
             self._init_ts -= 5 * 60 # start pulling data from the 5 minutes
-        ts_pretty = datetime.datetime.fromtimestamp(self._init_ts).strftime("%Y-%m-%d@%H:%M:%S")
+        ts_pretty = datetime.datetime.fromtimestamp(self._init_ts).strftime("%Y-%m-%d@%H:%M:%S UTC")
         logger.debug("[Beacons] Standalone version. Will request data since {} {} ({})".format(
             self._init_ts, self._init_ts_fract, ts_pretty))
 

@@ -1,6 +1,7 @@
 from __future__ import absolute_import, division, print_function
 import os
 import re
+import datetime
 import logging
 import requests
 from server import BADGE_ENDPOINT, BADGES_ENDPOINT, request_headers
@@ -22,8 +23,9 @@ class BadgeManagerStandalone():
             self._init_ts_fract = 0
         else:
             self._init_ts, self._init_ts_fract = now_utc_epoch()
-            self._init_ts -= 5 * 60 # start pulling data from the 5 minutes
-        ts_pretty = datetime.datetime.fromtimestamp(self._init_ts).strftime("%Y-%m-%d@%H:%M:%S")
+            # self._init_ts -= 5 * 60 # start pulling data from the 5 minutes
+            self._init_ts -= 24 * 60 * 60 # start pulling data from 12 hours ago
+        ts_pretty = datetime.datetime.fromtimestamp(self._init_ts).strftime("%Y-%m-%d@%H:%M: UTC")
         logger.debug("[Badges] Standalone version. Will request data since {} {} ({}))".format(
             self._init_ts, self._init_ts_fract, ts_pretty))
 

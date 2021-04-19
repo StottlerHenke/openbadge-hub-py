@@ -240,7 +240,7 @@ def dialogue(bdg, activate_audio, activate_proximity, mode="server"):
 
         # update badge object to hold latest timestamps
         last_chunk = bdg.dlg.chunks[-1]
-        last_chunk_ts_pretty = datetime.datetime.fromtimestamp(last_chunk.ts).strftime("%Y-%m-%d@%H:%M:%S")
+        last_chunk_ts_pretty = dt.fromtimestamp(last_chunk.ts).strftime("%Y-%m-%d@%H:%M:%S UTC")
         if bdg.is_newer_audio_ts(last_chunk.ts, last_chunk.fract):
             logger.debug("Setting last badge audio timestamp to {} {} ({})".format(
                 last_chunk.ts, last_chunk.fract, last_chunk_ts_pretty))
@@ -286,7 +286,7 @@ def dialogue(bdg, activate_audio, activate_proximity, mode="server"):
 
         # update badge object to hold latest timestamps
         last_scan = bdg.dlg.scans[-1]
-        last_scan_ts_pretty = datetime.datetime.fromtimestamp(last_scan.ts).strftime("%Y-%m-%d@%H:%M:%S")
+        last_scan_ts_pretty = dt.fromtimestamp(last_scan.ts).strftime("%Y-%m-%d@%H:%M:%S UTC")
         logger.debug("Setting last badge proximity timestamp to {} ([])".format(
             last_scan.ts, last_scan_ts_pretty))
         bdg.last_proximity_ts = last_scan.ts

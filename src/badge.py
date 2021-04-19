@@ -164,7 +164,7 @@ class BadgeDelegate(DefaultDelegate):
         self.reset()
 
     def timestamp_pretty(self): 
-        return datetime.datetime.fromtimestamp(self.timestamp_sec).strftime("%Y-%m-%d@%H:%M:%S")
+        return datetime.datetime.fromtimestamp(self.timestamp_sec).strftime("%Y-%m-%d@%H:%M:%S UTC")
 
     def reset(self):
         self.tempChunk = Chunk((None,None,None,None,None),[])
@@ -343,7 +343,7 @@ class Badge:
 
     @property
     def last_proximity_ts_pretty(self):
-        return datetime.datetime.fromtimestamp(self.last_proximity_ts).strftime("%Y-%m-%d@%H:%M:%S")
+        return datetime.datetime.fromtimestamp(self.last_proximity_ts).strftime("%Y-%m-%d@%H:%M:%S UTC")
 
     @last_contacted_ts.setter
     def last_contacted_ts(self, value):
@@ -363,7 +363,7 @@ class Badge:
     
     @property
     def last_audio_ts_pretty(self):
-        return datetime.datetime.fromtimestamp(self.last_audio_ts_int).strftime("%Y-%m-%d@%H:%M:%S")
+        return datetime.datetime.fromtimestamp(self.last_audio_ts_int).strftime("%Y-%m-%d@%H:%M:%S UTC")
 
     @last_audio_ts_int.setter
     def last_audio_ts_int(self, value):
@@ -504,7 +504,7 @@ class Badge:
 
         # log badge datetime regardless - may be useful to know after unsync
         self.logger.info("Badge datetime was: {},{} ({})".format(
-            self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
+            self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty()))
 
     def sync_timestamp(self):
         """
@@ -570,7 +570,7 @@ class Badge:
                 self.logger.info("Got time ack")
 
                 self.logger.info("Badge datetime was: {},{} ({})".format(
-                    self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
+                    self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty()))
 
             # Reset flag (hacky)
             self.dlg.gotTimestamp = False
@@ -585,7 +585,7 @@ class Badge:
                 self.logger.info("Got time ack")
 
                 self.logger.info("Badge datetime was: {},{} ({})".format(
-                    self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
+                    self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty()))
 
             retcode = 0
 
@@ -639,7 +639,7 @@ class Badge:
                     self.logger.info("Got time ack")
 
                     self.logger.info("Badge datetime was: {},{} ({})".format(
-                        self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
+                        self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty()))
 
             # Reset flag (hacky)
             self.dlg.gotTimestamp = False
@@ -655,7 +655,7 @@ class Badge:
                     self.logger.info("Got time ack")
 
                     self.logger.info("Badge datetime was: {},{} ({})".format(
-                        self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty))
+                        self.dlg.timestamp_sec, self.dlg.timestamp_ms, self.dlg.timestamp_pretty()))
 
             # audio data request since time X
             self.logger.info("Requesting audio data since {} {} ({})".format(
