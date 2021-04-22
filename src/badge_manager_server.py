@@ -188,7 +188,7 @@ class BadgeManagerServer:
 if __name__ == "__main__":
     logging.basicConfig()
     logger = logging.getLogger('badge_server')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     mgr = BadgeManagerServer(logger=logger)
     mgr.pull_badges_list()

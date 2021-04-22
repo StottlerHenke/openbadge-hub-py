@@ -37,7 +37,7 @@ class BeaconManagerServer:
 
         while not done:
             try:
-                self.logger.info("Requesting beacons from server {} ...".format(BADGES_ENDPOINT))
+                self.logger.info("Requesting beacons from server {} ...".format(BEACONS_ENDPOINT))
                 response = requests.get(BEACONS_ENDPOINT, headers=request_headers(), timeout=self.DEFAULT_TIMEOUT)
                 if response.ok:
                     self.logger.info("Updating beacons list ({})...".format(len(response.json())))
