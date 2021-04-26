@@ -7,7 +7,7 @@ volumes:
 
 services:
   hub-raspbian:
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./compose/openbadge-hub-py/Dockerfile_raspbian_prod
@@ -30,6 +30,6 @@ services:
     volumes:
       - hub_data:/data:ro
       - hub_logs:/logs:ro
-    restart: always
+    restart: unless-stopped
     entrypoint: ./entrypoint.sh
     network_mode: "host"
